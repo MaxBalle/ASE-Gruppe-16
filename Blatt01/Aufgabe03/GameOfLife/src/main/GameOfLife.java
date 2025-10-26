@@ -22,7 +22,7 @@ public class GameOfLife {
      * @throws IllegalArgumentException   if length or height is zero
      */
     public static boolean[][] createGrid(final int length, final int height) {
-        generation = 0;
+        generation = 1;
         boolean[][] grid;
 
         if (length == 0 || height == 0) {
@@ -144,22 +144,21 @@ public class GameOfLife {
      * @param point The point of the cell
      * @return A list of points representing the neighbouring cells
      */
-    private static List<Point> getNeighbours(final Point point) {
+    public static List<Point> getNeighbours(final Point point) {
         List<Point> neighbours = new ArrayList<>();
         int x = point.x;
         int y = point.y;
 
-        neighbours.add(new Point(x + 1, y));
-        neighbours.add(new Point(x - 1, y));
-
-        neighbours.add(new Point(x, y + 1));
-        neighbours.add(new Point(x, y - 1));
-
-        neighbours.add(new Point(x + 1, y + 1));
-        neighbours.add(new Point(x + 1, y - 1));
-
         neighbours.add(new Point(x - 1, y + 1));
+        neighbours.add(new Point(x, y + 1));
+        neighbours.add(new Point(x + 1, y + 1));
+
+        neighbours.add(new Point(x - 1, y));
+        neighbours.add(new Point(x + 1, y));
+
         neighbours.add(new Point(x - 1, y - 1));
+        neighbours.add(new Point(x, y - 1));
+        neighbours.add(new Point(x + 1, y - 1));
 
         return neighbours;
     }
@@ -171,7 +170,7 @@ public class GameOfLife {
      * @param point The point to check
      * @return True if the point is within the grid, false otherwise
      */
-    private static boolean isPartOfGrid(final boolean[][] grid, final Point point) {
+    public static boolean isPartOfGrid(final boolean[][] grid, final Point point) {
         return !(point.x < 0 || point.x > grid.length - 1 || point.y > grid[0].length - 1 || point.y < 0);
     }
 
@@ -180,7 +179,7 @@ public class GameOfLife {
      * Rules:
      * 1. Underpopulation: Any live cell with fewer than two live neighbours dies.
      * 2. Overpopulation: Any live cell with more than three live neighbours dies.
-     * 3. Survival: Any live cell with two or three live neighbours lives on to the next generation.
+     * 3. Stability: Any live cell with two or three live neighbours lives on to the next generation.
      * 4. Birth: Any dead cell with exactly three live neighbours becomes a live cell.
      *
      * @param grid       The current grid
@@ -204,7 +203,7 @@ public class GameOfLife {
      * @param neighbours The list of neighbouring cells
      * @return The number of alive neighbours
      */
-    private static int getNumberNeighboursAlive(boolean[][] grid, List<Point> neighbours) {
+    public static int getNumberNeighboursAlive(boolean[][] grid, List<Point> neighbours) {
         int neighboursAlive = 0;
         for (Point neighbour : neighbours) {
             if (GameOfLife.isAlive(neighbour, grid)) {
@@ -212,5 +211,14 @@ public class GameOfLife {
             }
         }
         return neighboursAlive;
+    }
+
+    /**
+     * Gets the current generation of the grid.
+     *
+     * @return The current generation
+     */
+    public static int getGeneration() {
+        return generation;
     }
 }
