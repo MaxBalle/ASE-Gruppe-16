@@ -8,12 +8,12 @@ version = '1.0-SNAPSHOT'
 sourceSets {
     main {
         java {
-            srcDirs = ['Blatt01/Aufgabe01', 'Blatt01/Aufgabe02/main']
+            srcDirs = ['Blatt01/Aufgabe01', 'Blatt01/Aufgabe02/main', 'Blatt01/Aufgabe03/GameOfLife/src/main']
         }
     }
     test {
         java {
-            srcDirs = ['Blatt01/Aufgabe02/test']
+            srcDirs = ['Blatt01/Aufgabe02/test', 'Blatt01/Aufgabe03/GameOfLife/src/test']
         }
     }
 }
