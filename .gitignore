@@ -11,3 +11,19 @@
 /build/
 /out/
 /.gradle/
+
+# macOS system files
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Resource fork files (werden beim Kopieren von Files erzeugt)
+._*
+
+# macOS metadata files in archives (z.B. ZIP)
+.Spotlight-V100
+.Trashes
+.fseventsd
+
+# Icon file on folders
+Icon?
