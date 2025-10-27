@@ -1,22 +1,33 @@
+package main;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class CriticPath {
-    private List<Workpackage> workpackages = new ArrayList<Workpackage>();
-    private List<Workpackage> startNodes = new ArrayList<Workpackage>();
-    private List<Workpackage> endNodes = new ArrayList<Workpackage>();
+/**
+ * Calculates the critical path in a project network diagram.
+ * The critical path is the sequence of work packages that determines the project duration.
+ */
+public class CriticalPath {
+    // Project structure
+    private List<Workpackage> workpackages = new ArrayList<>();
+    private List<Workpackage> startNodes = new ArrayList<>();
+    private List<Workpackage> endNodes = new ArrayList<>();
+
+    // Public methods - Getters and Setters
+    public List<Workpackage> getWorkpackages() {
+        return workpackages;
+    }
+
+    public void setWorkpackages(List<Workpackage> workpackages) {
+        this.workpackages = workpackages;
+    }
 
     public List<Workpackage> getStartNodes() {
         return startNodes;
     }
 
-    public void setStartNodes(List<Workpackage> startNodes) {
-        this.startNodes = startNodes;
-
-    }
-
-    // neue Methode: verbindet Dependencies als predecessors/successors und füllt Start-/Endknoten
-    public void builtProject() {
+    // Project initialization
+    public void buildProject() {
         // Vorherige Verknüpfungen löschen
         startNodes.clear();
         endNodes.clear();
@@ -29,7 +40,7 @@ public class CriticPath {
 
         // Für jedes Workpackage: alle in depedencies gelisteten Elemente sind dessen Vorgänger
         for (Workpackage wp : workpackages) {
-            List<Workpackage> deps = wp.getDepedencies();
+            List<Workpackage> deps = wp.getDependencies();
             if (deps == null) continue;
             for (Workpackage dep : deps) {
                 if (dep == null) continue;
@@ -40,7 +51,7 @@ public class CriticPath {
 
         // Start- und Endknoten ermitteln und Flags setzen
         for (Workpackage wp : workpackages) {
-            boolean isStart = (wp.getDepedencies() == null || wp.getDepedencies().isEmpty());
+            boolean isStart = (wp.getDependencies() == null || wp.getDependencies().isEmpty());
             wp.setStartNode(isStart);
             if (isStart) startNodes.add(wp);
 
@@ -48,15 +59,6 @@ public class CriticPath {
             wp.setEndNode(isEnd);
             if (isEnd) endNodes.add(wp);
         }
-    }
-
-    // optional: Getter / Setter für workpackages
-    public List<Workpackage> getWorkpackages() {
-        return workpackages;
-    }
-
-    public void setWorkpackages(List<Workpackage> workpackages) {
-        this.workpackages = workpackages;
     }
  
     private void calculateEarliestTimes() {
