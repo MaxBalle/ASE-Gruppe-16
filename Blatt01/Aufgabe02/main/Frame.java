@@ -2,37 +2,65 @@ import java.util.Optional;
 
 public class Frame {
     
-    private int frameNumber;
+    private final int frameNumber;
     private Optional<Integer> firstScore;
     private Optional<Integer> secondScore;
     private Optional<Integer> thirdScore;
-    private boolean spare;
-    private boolean strike;
 
-    public Frame(int frameNumber) {
-
+    public Frame(final int frameNumber) {
         this.frameNumber = frameNumber;
         this.firstScore = Optional.empty();
         this.secondScore = Optional.empty();
         this.thirdScore = Optional.empty();
-        this.spare = false;
-        this.strike = false;
     }
 
-    public void addScore(int pins) {
-        if (isComplete()) throw new Error("Frame is already complete!");
+    /**
+     * addScore is called to add a score of a throw to the frame
+     *
+     *
+     * @param pins The number of pins knocked over this throw
+     * @throws IllegalStateException if it gets called even though the frame is complete
+     * @throws IllegalArgumentException if you want to add more points than possible to the current frame
+     */
+    public void addScore(final int pins) throws IllegalStateException, IllegalArgumentException {
+        if (pins < 0 || pins > 10) {
+            throw new IllegalArgumentException("Pins must be between 0 and 10");
+        }
+        if (isComplete()) throw new IllegalStateException("Frame is already complete!");
+
+        IllegalArgumentException tooManyPinsException = new IllegalArgumentException("Too many pins for this frame");
+        if (getFrameNumber() < 10) {
+            if (hasFirstScore() && getFirstScore() + pins > 10) {
+                throw tooManyPinsException;
+            }
+        } else if (getFrameNumber() == 10) {
+            int limit = 10;
+            if (hasFirstScore()) {
+                limit -= getFirstScore();
+                if (isStrike()) {
+                    limit = 20;
+                }
+                if (!hasSecondScore() && pins > limit) {
+                    throw tooManyPinsException;
+                }
+            }
+            if (hasSecondScore()) {
+                limit -= getSecondScore();
+                if (isSpare()) {
+                    limit = 10;
+                }
+                if (pins > limit) {
+                    throw tooManyPinsException;
+                }
+            }
+        }
 
         if (firstScore.isEmpty()) {
             this.firstScore = Optional.of(pins);
-            if (pins == 10) {
-                this.strike = true;
-            }
         } else if (secondScore.isEmpty()) {
             this.secondScore = Optional.of(pins);
-
-            if (firstScore.get() + secondScore.get() == 10) {
-                this.spare = true;
-            }
+        } else if (thirdScore.isEmpty()) {
+            this.thirdScore = Optional.of(pins);
         }
     }
 
@@ -41,7 +69,6 @@ public class Frame {
     }
 
     public int getFirstScore() {
-
         return firstScore.get();
     }
 
@@ -50,7 +77,6 @@ public class Frame {
     }
 
     public int getSecondScore() {
-
         return secondScore.get();
     }
 
@@ -63,29 +89,31 @@ public class Frame {
     }
 
     public boolean isSpare() {
-
-        return spare;
+        if (!hasFirstScore() || !hasSecondScore() || isStrike()) {
+            return false;
+        }
+        return getFirstScore() + getSecondScore() == 10;
     }
 
     public boolean isStrike() {
-
-        return strike;
-    }
-
-    public void setFrameNumber(int number) {
-    
-        this.frameNumber = number;
+        if (!hasFirstScore()) {
+            return false;
+        }
+        return getFirstScore() == 10;
     }
 
     public int getFrameNumber() {
-
         return frameNumber;
     }
 
     public boolean isComplete() {
-        if (firstScore.isEmpty()) return false;
-        if (secondScore.isEmpty() && !isStrike()) return false;
-        if (getFrameNumber() == 10 && (isStrike() || isSpare())  && thirdScore.isEmpty()) return false;
+        if (firstScore.isEmpty()) {
+            return false;
+        } else if (secondScore.isEmpty() && !isStrike()) {
+            return false;
+        } else if (getFrameNumber() == 10 && (isStrike() || isSpare())  && thirdScore.isEmpty()) {
+            return false;
+        }
         return true;
     }
 }
