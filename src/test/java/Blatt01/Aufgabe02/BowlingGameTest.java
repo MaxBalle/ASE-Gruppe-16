@@ -1,3 +1,5 @@
+package Blatt01.Aufgabe02;
+
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 

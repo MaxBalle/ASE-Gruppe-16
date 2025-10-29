@@ -1,3 +1,5 @@
+package Blatt01.Aufgabe02;
+
 import java.util.Optional;
 
 public class Frame {
