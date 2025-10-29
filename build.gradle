@@ -1,32 +1,52 @@
 plugins {
-    id 'java'
+  id 'java'
 }
 
 group = 'com.example'
 version = '1.0-SNAPSHOT'
 
-sourceSets {
-    main {
-        java {
-            srcDirs = ['Blatt01/Aufgabe01', 'Blatt01/Aufgabe02/main', 'Blatt01/Aufgabe03/GameOfLife/src/main']
-        }
-    }
-    test {
-        java {
-            srcDirs = ['Blatt01/Aufgabe02/test', 'Blatt01/Aufgabe03/GameOfLife/src/test']
-        }
-    }
+repositories {
+  mavenCentral()
 }
 
+java {
+  toolchain {
+    languageVersion = JavaLanguageVersion.of(21) 
+  }
+}
 
-repositories {
-    mavenCentral()
+sourceSets {
+  main {
+    java {
+      srcDirs = [
+        'Blatt01/Aufgabe01/src/main/java',
+        'Blatt01/Aufgabe02/main',
+        'Blatt01/Aufgabe03/GameOfLife/src/main'
+      ]
+    }
+  }
+  test {
+    java {
+      srcDirs = [
+        'Blatt01/Aufgabe01/src/test/java',
+        'Blatt01/Aufgabe02/test',
+        'Blatt01/Aufgabe03/GameOfLife/src/test'
+      ]
+    }
+  }
 }
 
 dependencies {
-    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.0'
+
+  testImplementation(platform('org.junit:junit-bom:5.11.3'))
+
+  testImplementation 'org.junit.jupiter:junit-jupiter-api'
+  testRuntimeOnly  'org.junit.jupiter:junit-jupiter-engine'
+
+  testImplementation 'junit:junit:4.13.2'
+  testRuntimeOnly  'org.junit.vintage:junit-vintage-engine'
 }
 
 test {
-    useJUnitPlatform()
-}
+  useJUnitPlatform()
+  }
