@@ -1,6 +1,8 @@
-package Blatt01.Aufgabe03;
+package test;
 
-import org.junit.jupiter.api.Test;
+import main.GameOfLife;
+import org.junit.Test;
+
 import java.awt.*;
 import java.util.List;
 

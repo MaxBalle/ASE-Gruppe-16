@@ -1,4 +1,4 @@
-package Blatt01.Aufgabe03;
+package main;
 
 import java.awt.*;
 import java.util.ArrayList;
