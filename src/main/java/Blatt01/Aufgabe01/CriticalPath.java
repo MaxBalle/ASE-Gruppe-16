@@ -1,4 +1,4 @@
-package ase.blatt01.aufgabe01;
+package Blatt01.Aufgabe01;
 
 import java.util.ArrayList;
 import java.util.Collections;
