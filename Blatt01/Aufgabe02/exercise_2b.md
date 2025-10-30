@@ -28,7 +28,7 @@ Um den Bonus zu ermitteln, wird das nächste Frame aufgerufen. Wenn firstScore v
 Um den Bonus zu ermitteln, wird das nächste Frame aufgerufen. Wenn firstScore vorhanden ist, wird dieser als Bonus addiert.
 
 
-### Designentscheidungen (TODO)
+### Designentscheidungen (TODO) LOL
 
 * Frames werden in Map<Integer, Frame> gespeichert
 * Verwendung von Test Driven Development
