@@ -69,30 +69,58 @@ public class Frame {
         }
     }
 
+    /**
+     * hasFirstScore returns a boolean telling if a first score of the frame is present or not
+     * @return true if first score of the frame if present, otherwise false
+     */
     public boolean hasFirstScore() {
         return firstScore.isPresent();
     }
 
+    /**
+     * getFirstScore() returns the first score of the frame
+     * @return the first score of the frame
+     */
     public int getFirstScore() {
         return firstScore.get();
     }
 
+    /**
+     * hasSecondScore() returns a boolean telling if a second score of the frame is present or not
+     * @return true if second score of the frame is present, otherwise false
+     */
     public boolean hasSecondScore() {
         return secondScore.isPresent();
     }
 
+    /**
+     * getSecondScore() returns the second score of the frame
+     * @return the second score of the frame
+     */
     public int getSecondScore() {
         return secondScore.get();
     }
 
+    /**
+     * hasThirdScore() returns a boolean telling if a third score of the frame exists or not
+     * @return true if a third score is present, otherwise false
+     */
     public boolean hasThirdScore() {
         return thirdScore.isPresent();
     }
 
+    /**
+     * getThirdScore() returns the third score of the frame
+     * @return the third score of the frame 
+     */
     public int getThirdScore() {
         return thirdScore.get();
     }
 
+    /**
+     * isSpare() returns a boolean telling if a spare is present in the frame
+     * @return true if a spare is present in the frame, otherwise false
+     */
     public boolean isSpare() {
         if (!hasFirstScore() || !hasSecondScore() || isStrike()) {
             return false;
@@ -100,6 +128,10 @@ public class Frame {
         return getFirstScore() + getSecondScore() == 10;
     }
 
+    /**
+     * isStrike() returns a boolean telling if a spare is present in the frame
+     * @return true if a strike is present, otherwise false
+     */
     public boolean isStrike() {
         if (!hasFirstScore()) {
             return false;
@@ -107,10 +139,18 @@ public class Frame {
         return getFirstScore() == 10;
     }
 
+    /**
+     * getFrameNumber() returns the position of the frame as an integer inside a whole bowling game
+     * @return integer of the frame inside the game
+     */
     public int getFrameNumber() {
         return frameNumber;
     }
 
+    /**
+     * isComplete returns a boolean telling if the frame is complete
+     * @return true if the frame is complete, otherwise false
+     */
     public boolean isComplete() {
         if (firstScore.isEmpty()) {
             return false;
