@@ -71,10 +71,8 @@ public class BowlingGame {
                 }
             }
         }
-        if (!currentFrame.isComplete() && currentFrameNumber != 10) {
-            if (currentFrame.hasFirstScore()) {
-                score += currentFrame.getFirstScore();
-            }
+        if (!currentFrame.isComplete() && currentFrameNumber != 10 && currentFrame.hasFirstScore()) {
+            score += currentFrame.getFirstScore();
         }
         if (currentFrameNumber == 10) {
             Frame finalFrame = frames.get(currentFrameNumber);
@@ -91,7 +89,16 @@ public class BowlingGame {
         return score;
     }
 
-    private int getStrikeBonus(Frame frame) {
+    /**
+     * Calculates the bonus for the strike of the given frame.
+     * Requires frame number below 10.
+     *
+     * @param frame for which the strike occurred
+     * @return strike bonus
+     */
+    private int getStrikeBonus(final Frame frame) {
+        assert frame.isStrike();
+        assert frame.getFrameNumber() < 10;
         int bonus = 0;
         int frameNumber = frame.getFrameNumber();
         if (frames.containsKey(frameNumber + 1)) {
@@ -101,7 +108,7 @@ public class BowlingGame {
             }
             if (nextFrame.hasSecondScore()) {
                 bonus += nextFrame.getSecondScore();
-            } else if (frames.containsKey(frameNumber + 2)) {
+            } else if (nextFrame.isComplete() && frames.containsKey(frameNumber + 2)) {
                 Frame secondNextFrame = frames.get(frameNumber + 2);
                 if (secondNextFrame.hasFirstScore()) {
                     bonus += secondNextFrame.getFirstScore();
@@ -111,7 +118,16 @@ public class BowlingGame {
         return bonus;
     }
 
-    private int getSpareBonus(Frame frame) {
+    /**
+     * Calculates the bonus for the strike of the given frame.
+     * Requires frame number below 10.
+     *
+     * @param frame for which the spare occurred
+     * @return spare bonus
+     */
+    private int getSpareBonus(final Frame frame) {
+        assert frame.isSpare();
+        assert frame.getFrameNumber() < 10;
         int bonus = 0;
         int frameNumber = frame.getFrameNumber();
         if (frames.containsKey(frameNumber + 1)) {

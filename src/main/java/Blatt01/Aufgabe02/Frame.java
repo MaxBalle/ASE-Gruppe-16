@@ -10,6 +10,9 @@ public class Frame {
     private Optional<Integer> thirdScore;
 
     public Frame(final int frameNumber) {
+        if (frameNumber < 1 || frameNumber > 10) {
+            throw new IllegalArgumentException("Frame number must be between 1 and 10");
+        }
         this.frameNumber = frameNumber;
         this.firstScore = Optional.empty();
         this.secondScore = Optional.empty();

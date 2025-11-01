@@ -6,12 +6,49 @@ import static org.junit.jupiter.api.Assertions.*;
 public class BowlingGameTest {
 
     @Test
-    public void testStandardGame() {
+    public void testSingleFrame() {
         BowlingGame game = new BowlingGame();
         game.roll(5);
         assertEquals(5, game.score());
         game.roll(3);
         assertEquals(8, game.score());
+    }
+
+    @Test
+    public void testFullNormalGame() {
+        BowlingGame game = new BowlingGame();
+        //Frame 1
+        game.roll(5);
+        game.roll(3);
+        //Frame 2
+        game.roll(1);
+        game.roll(1);
+        //Frame 3
+        game.roll(0);
+        game.roll(0);
+        //Frame 4
+        game.roll(3);
+        game.roll(4);
+        //Frame 5
+        game.roll(9);
+        game.roll(0);
+        //Frame 6
+        game.roll(2);
+        game.roll(6);
+        //Frame 7
+        game.roll(3);
+        game.roll(3);
+        //Frame 8
+        game.roll(5);
+        game.roll(4);
+        //Frame 9
+        game.roll(1);
+        game.roll(8);
+        //Frame 10
+        game.roll(7);
+        game.roll(0);
+
+        assertEquals(65, game.score());
     }
 
     @Test 
@@ -70,6 +107,24 @@ public class BowlingGameTest {
     }
 
     @Test
+    public void testPerfectGame() {
+        BowlingGame game = new BowlingGame();
+        for (int i = 1; i <= 12; i++) {
+            game.roll(10);
+        }
+        assertEquals(300, game.score());
+    }
+
+    @Test
+    public void testWorstGame() {
+        BowlingGame game = new BowlingGame();
+        for (int i = 1; i <= 20; i++) {
+            game.roll(0);
+        }
+        assertEquals(0, game.score());
+    }
+
+    @Test
     public void test11FrameGame() {
         BowlingGame game = new BowlingGame();
         assertThrows(IllegalStateException.class, () -> {
@@ -78,15 +133,6 @@ public class BowlingGameTest {
                 game.roll(0);
             }
         });
-    }
-
-    @Test
-    public void testPerfectGame() {
-        BowlingGame game = new BowlingGame();
-        for (int i = 1; i <= 12; i++) {
-            game.roll(10);
-        }
-        assertEquals(300, game.score());
     }
 
     @Test
