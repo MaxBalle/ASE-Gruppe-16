@@ -42,13 +42,10 @@ public class GameOfLife {
      * ## AI Generated Documentation (AutoComplete, GitHub Copilot) ##
      */
     private boolean[][] createGridWithDeadCells(final int width, final int height) {
-
-        boolean[][] newGrid;
-
         if (width <= 0 || height <= 0) {
             throw new IllegalArgumentException("Error: Grid dimensions must be greater than zero.");
         }
-        newGrid = new boolean[width][height];
+        boolean[][] newGrid = new boolean[width][height];
 
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
@@ -128,10 +125,7 @@ public class GameOfLife {
      * Advances the grid to the next generation based on the rules of Conway's Game of Life.
      **/
     public void step() {
-        int width = this.width;
-        int height = this.height;
         boolean[][] newGrid = cloneGrid();
-
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
                 newGrid[x][y] = isAliveInNextGeneration(x, y);
@@ -153,7 +147,6 @@ public class GameOfLife {
      */
     private List<Point> getNeighbours(final int x, final int y) {
         List<Point> neighbours = new ArrayList<>();
-
         for (int offsetX = -1; offsetX <= 1; offsetX++) {
             for (int offsetY = -1; offsetY <= 1; offsetY++) {
                 Point currentNeighbour = new Point(x + offsetX, y + offsetY);
@@ -203,8 +196,10 @@ public class GameOfLife {
         }
         int neighboursAlive = countNeighboursAlive(x, y);
         if (isAlive(x, y)) {
+            // if true - stability applies, if false - under/overpopulation applies
             return neighboursAlive == 2 || neighboursAlive == 3;
         } else {
+            // if true - birth applies, if false - remains dead
             return neighboursAlive == 3;
         }
     }
