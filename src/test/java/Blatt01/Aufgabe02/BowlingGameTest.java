@@ -49,6 +49,7 @@ public class BowlingGameTest {
         game.roll(0);
 
         assertEquals(65, game.score());
+        assertTrue(game.isOver());
     }
 
     @Test 
@@ -88,6 +89,7 @@ public class BowlingGameTest {
         game.roll(1);
         game.roll(1);
         assertEquals(12, game.score());
+        assertTrue(game.isOver());
     }
 
     @Test
@@ -104,6 +106,7 @@ public class BowlingGameTest {
         game.roll(5);
         game.roll(1);
         assertEquals(11, game.score());
+        assertTrue(game.isOver());
     }
 
     @Test
@@ -113,6 +116,7 @@ public class BowlingGameTest {
             game.roll(10);
         }
         assertEquals(300, game.score());
+        assertTrue(game.isOver());
     }
 
     @Test
@@ -122,6 +126,7 @@ public class BowlingGameTest {
             game.roll(0);
         }
         assertEquals(0, game.score());
+        assertTrue(game.isOver());
     }
 
     @Test
