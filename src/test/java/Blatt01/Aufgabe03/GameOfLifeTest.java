@@ -2,7 +2,6 @@ package Blatt01.Aufgabe03;
 
 import org.junit.jupiter.api.Test;
 import java.awt.*;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -19,29 +18,24 @@ public class GameOfLifeTest {
     @Test
     public void testGameOfLifeConstructor() {
         GameOfLife gameOfLife = new GameOfLife(3, 5);
-        assertEquals(3, gameOfLife.getLength());
+        assertEquals(3, gameOfLife.getWidth());
         assertEquals(5, gameOfLife.getHeight());
         assertEquals(1, gameOfLife.getGeneration());
         assertNotEquals(null, gameOfLife.getGrid());
     }
 
     /**
-     * Test creating a grid with negative dimensions.
+     * Test creating a grid with negative or zero dimensions.
      */
     @Test
-    public void testCreateGridNegativeDimensions() {
-        assertThrows(NegativeArraySizeException.class, () -> {
-            GameOfLife gameOfLife = new GameOfLife(-1, 5);
-        });}
-
-    /**
-     * Test creating a grid with zero dimensions.
-     */
-    @Test
-    public void testCreateGridWithZeroSize() {
+    public void testCreateGridNegativeOrZeroDimensions() {
         assertThrows(IllegalArgumentException.class, () -> {
-            GameOfLife gameOfLife = new GameOfLife(0, 0);
-        });}
+            GameOfLife gameOfLife = new GameOfLife(5, 0);
+        });
+        assertThrows(IllegalArgumentException.class, () -> {
+            GameOfLife gameOfLife = new GameOfLife(-6, 12);
+        });
+    }
 
     /**
      * Test setting a cell to alive.
@@ -49,21 +43,8 @@ public class GameOfLifeTest {
     @Test
     public void testSetCellAlive() {
         GameOfLife gameOfLife = new GameOfLife(3, 5);
-        Point p = new Point(1, 1);
-        gameOfLife.setAlive(p);
+        gameOfLife.setAlive(1,1);
         assertTrue(gameOfLife.getGrid()[1][1]);
-    }
-
-    /**
-     * Test setting a cell to alive that is out of bounds.
-     */
-    @Test
-    public void testSetCellAliveOutOfBounds() {
-        GameOfLife gameOfLife = new GameOfLife(1, 1);
-        Point p = new Point(3, 3);
-        assertThrows(IndexOutOfBoundsException.class, () -> {
-            gameOfLife.setAlive(p);
-        });
     }
 
     /**
@@ -72,9 +53,19 @@ public class GameOfLifeTest {
     @Test
     public void testSetCellDead() {
         GameOfLife gameOfLife = new GameOfLife(3, 5);
-        Point p = new Point(1, 1);
-        gameOfLife.setAlive(p);
-        assertTrue(gameOfLife.getGrid()[1][1]);
+        gameOfLife.setDead(1,1);
+        assertFalse(gameOfLife.getGrid()[1][1]);
+    }
+
+    /**
+     * Test setting a cell to alive that is out of bounds.
+     */
+    @Test
+    public void testSetCellAliveOutOfBounds() {
+        GameOfLife gameOfLife = new GameOfLife(1, 1);
+        assertThrows(IllegalArgumentException.class, () -> {
+            gameOfLife.setAlive(3,3);
+        });
     }
 
     /**
@@ -83,10 +74,18 @@ public class GameOfLifeTest {
     @Test
     public void testSetCellDeadOutOfBounds() {
         GameOfLife gameOfLife = new GameOfLife(1, 1);
-        Point p = new Point(3, 3);
-        assertThrows(IndexOutOfBoundsException.class, () -> {
-            gameOfLife.setDead(p);
+        assertThrows(IllegalArgumentException.class, () -> {
+            gameOfLife.setDead(3,3);
         });
+    }
+
+    /**
+     * Test checking if a cell is alive that is out of bounds. Edge behavior is to return false.
+     */
+    @Test
+    public void testIsAliveOutOfBounds() {
+        GameOfLife gameOfLife = new GameOfLife(2, 2);
+        assertFalse(gameOfLife.isAlive(5, 5));
     }
 
     /**
@@ -95,25 +94,8 @@ public class GameOfLifeTest {
     @Test
     public void testIsAlive() {
         GameOfLife gameOfLife = new GameOfLife(3, 5);
-        Point p = new Point(1, 1);
-        gameOfLife.setAlive(p);
-        assertTrue(gameOfLife.isAlive(p));
-    }
-
-    /**
-     * Test getting all neighbors of a cell.
-     */
-    @Test
-    public void testGetNeighbors() {
-        GameOfLife gameOfLife = new GameOfLife(3, 3);
-        Point p = new Point(1, 1);
-        List<Point> neighbors = gameOfLife.getNeighbours(p);
-        List<Point> actualNeighbors = List.of(
-                new Point(0, 2), new Point(1, 2), new Point(2, 2),
-                new Point(0, 1),                        new Point(2, 1),
-                new Point(0, 0), new Point(1, 0), new Point(2, 0)
-        );
-        assertArrayEquals(neighbors.toArray(), actualNeighbors.toArray());
+        gameOfLife.setAlive(1,1);
+        assertTrue(gameOfLife.isAlive(1,1));
     }
 
     /**
@@ -122,10 +104,15 @@ public class GameOfLifeTest {
     @Test
     public void testIsPartOfGrid() {
         GameOfLife gameOfLife = new GameOfLife(3, 3);
-        Point insidePoint = new Point(1, 1);
-        Point outsidePoint = new Point(5, 5);
-        assertTrue(gameOfLife.isPartOfGrid(insidePoint));
-        assertFalse(gameOfLife.isPartOfGrid(outsidePoint));
+
+        assertTrue(gameOfLife.isPartOfGrid(1,1));
+        assertFalse(gameOfLife.isPartOfGrid(5,5));
+
+        // Test edges
+        assertTrue(gameOfLife.isPartOfGrid(0,0));
+        assertTrue(gameOfLife.isPartOfGrid(2,2));
+        assertTrue(gameOfLife.isPartOfGrid(2,0));
+        assertTrue(gameOfLife.isPartOfGrid(0,2));
     }
 
     /**
@@ -135,9 +122,9 @@ public class GameOfLifeTest {
     @Test
     public void testUnderpopulationRule() {
         GameOfLife gameOfLife = new GameOfLife(3, 3);
-        gameOfLife.setAlive(new Point(1, 1));
+        gameOfLife.setAlive(1, 1);
         gameOfLife.step();
-        assertFalse(gameOfLife.isAlive(new Point(1, 1)));
+        assertFalse(gameOfLife.isAlive(1, 1));
     }
 
     /**
@@ -148,15 +135,15 @@ public class GameOfLifeTest {
     public void testOverpopulationRule() {
         GameOfLife gameOfLife = new GameOfLife(3, 3);
 
-        gameOfLife.setAlive(new Point(1, 1));
+        gameOfLife.setAlive(1, 1);
 
-        gameOfLife.setAlive(new Point(0, 0));
-        gameOfLife.setAlive(new Point(0, 1));
-        gameOfLife.setAlive(new Point(0, 2));
-        gameOfLife.setAlive(new Point(1, 0));
+        gameOfLife.setAlive(0, 0);
+        gameOfLife.setAlive(0, 1);
+        gameOfLife.setAlive(0, 2);
+        gameOfLife.setAlive(1, 0);
 
         gameOfLife.step();
-        assertFalse(gameOfLife.isAlive(new Point(1, 1)));
+        assertFalse(gameOfLife.isAlive(1, 1));
     }
 
     /**
@@ -167,17 +154,17 @@ public class GameOfLifeTest {
     public void testStabilityRule() {
         GameOfLife gameOfLife = new GameOfLife(4, 4);
 
-        gameOfLife.setAlive(new Point(1, 1));
-        gameOfLife.setAlive(new Point(1, 2));
-        gameOfLife.setAlive(new Point(2, 1));
-        gameOfLife.setAlive(new Point(2, 2));
+        gameOfLife.setAlive(1, 1);
+        gameOfLife.setAlive(1, 2);
+        gameOfLife.setAlive(2, 1);
+        gameOfLife.setAlive(2, 2);
 
         gameOfLife.step();
 
-        assertTrue(gameOfLife.isAlive(new Point(1, 1)));
-        assertTrue(gameOfLife.isAlive(new Point(1, 2)));
-        assertTrue(gameOfLife.isAlive(new Point(2, 1)));
-        assertTrue(gameOfLife.isAlive(new Point(2, 2)));
+        assertTrue(gameOfLife.isAlive(1, 1));
+        assertTrue(gameOfLife.isAlive(1, 2));
+        assertTrue(gameOfLife.isAlive(2, 1));
+        assertTrue(gameOfLife.isAlive(2, 2));
     }
 
     /**
@@ -188,26 +175,26 @@ public class GameOfLifeTest {
     public void testBirthRule() {
         GameOfLife gameOfLife = new GameOfLife(3, 3);
 
-        gameOfLife.setAlive(new Point(0, 1));
-        gameOfLife.setAlive(new Point(1, 0));
-        gameOfLife.setAlive(new Point(1, 2));
+        gameOfLife.setAlive(0, 1);
+        gameOfLife.setAlive(1, 0);
+        gameOfLife.setAlive(1, 2);
 
         gameOfLife.step();
-        assertTrue(gameOfLife.isAlive(new Point(1, 1)));
+        assertTrue(gameOfLife.isAlive(1, 1));
     }
 
     /**
-     * Test getting the number of alive neighbours of a cell.
+     * Test counting the number of alive neighbours of a cell.
      */
     @Test
-    public void testGetNumberNeighboursAlive() {
+    public void testCountNeighboursAlive() {
         GameOfLife gameOfLife = new GameOfLife(3, 3);
 
-        gameOfLife.setAlive(new Point(0, 1));
-        gameOfLife.setAlive(new Point(1, 0));
-        gameOfLife.setAlive(new Point(1, 2));
+        gameOfLife.setAlive(0, 1);
+        gameOfLife.setAlive(1, 0);
+        gameOfLife.setAlive(1, 2);
 
-        int aliveNeighbors = gameOfLife.getNumberNeighboursAlive(gameOfLife.getNeighbours(new Point(1, 1)));
+        int aliveNeighbors = gameOfLife.countNeighboursAlive(1, 1);
         assertEquals(3, aliveNeighbors);
     }
 
