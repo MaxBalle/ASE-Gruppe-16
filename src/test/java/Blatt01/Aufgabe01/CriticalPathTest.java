@@ -11,6 +11,18 @@ import org.junit.jupiter.api.Test;
 /**
  * Test class for CriticalPath.
  * Verifies correct calculation of earliest/latest times, slack, and critical path.
+ *
+ * Group 16:
+ * @author Max Balle (3592845) - st178636@stud.uni-stuttgart.de
+ * @author Annalena Schmid (3530959) - st173100@stud.uni-stuttgart.de
+ * @author Marie Kufner (3535116) - st173710@stud.uni-stuttgart.de
+ * @author Moritz Neubert (3860551) - st199704@stud.uni-stuttgart.de
+ * @author Anh Quan Le (3593420) - st177186@stud.uni-stuttgart.de
+ * @author Elena Restivo (3594296) - st177463@stud.uni-stuttgart.de
+ * @author Martin Huynh (3532274) - st173632@stud.uni-stuttgart.de
+ * @author Luca Hirt (3591972) - st178216@stud.uni-stuttgart.de
+ * @author Trang Hua (3259405) - st149076@stud.uni-stuttgart.de
+ * @author Christoph Alber (3824940) - st196946@stud.uni-stuttgart.de
  */
 public class CriticalPathTest {
 
