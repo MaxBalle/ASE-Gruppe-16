@@ -14,7 +14,7 @@ In jeder Iteration wird:
     * Falls negativ, wird der zweite Score des Frames zum gesamten Score addiert 
       * Wenn im Frame ein Spare geworfen wurde, wird die Methode getSpareBonus(frame) aufgerufen und zum gesamten Score addiert
 
-Nach der Iteration durch alle regulären vollständigen Frames wird überprüft, ob der der aktuellste Frame vollständig ist und ob dieser der 10. Frame des Spiels ist.
+Nach der Iteration durch alle regulären vollständigen Frames wird überprüft, ob der aktuellste Frame vollständig ist und ob dieser der 10. Frame des Spiels ist.
 
 Falls der aktuellste Frame nicht komplett ist und es sich nicht um den 10. Frame handelt, wird der erste Score des Frames aufgerufen und zum gesamten Score addiert, wenn dieser vorhanden ist.
 Wenn es der 10. Frame ist, wird überprüft, ob dieser einen ersten und zweiten Score hat. Diese werden dann zum gesamten Score addiert. Wenn im 10. Frame ein Strike oder Spare geworfen wurde und ein dritter Score zusätzlich existiert, wird dieser auch zum gesamten Score addiert.
