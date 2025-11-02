@@ -1,4 +1,4 @@
-## Aufgabe 3b
+## Aufgabe 2b
 
 ### Berechnung vom Score
 
