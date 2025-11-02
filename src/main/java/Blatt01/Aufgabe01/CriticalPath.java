@@ -71,9 +71,7 @@ public final class CriticalPath {
             .toList();
 
         return new Result(duration, critical);
-    }
-
-    
+    }    
     
     /**
      * Initializes the project graph from the dependency information of each work package.
@@ -110,7 +108,6 @@ public final class CriticalPath {
             if (isEnd)   endNodes.add(wp);
         }
     }
-
 
 
     /**

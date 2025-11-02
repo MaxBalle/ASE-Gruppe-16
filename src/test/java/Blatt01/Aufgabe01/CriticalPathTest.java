@@ -9,7 +9,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 /**
- * Test class for {@link CriticalPath}.
+ * Test class for CriticalPath.
  * Verifies correct calculation of earliest/latest times, slack, and critical path.
  */
 public class CriticalPathTest {

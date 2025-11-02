@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Represents a single work package.
+ * Represents a single workpackage.
  * Each work package contains timing information and dependency relations
  * used to calculate the critical path.
  */
