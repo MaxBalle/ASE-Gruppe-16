@@ -2,178 +2,264 @@ package Blatt01.Aufgabe01;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 /**
- * Represents a single work package (task) in a project network.
- * Each work package has timing information and relationships to others,
- * used for Critical Path Method (CPM) analysis.
+ * Represents a single work package.
+ * Each work package contains timing information and dependency relations
+ * used to calculate the critical path.
  */
 public class Workpackage {
 
-    // --------------------------- Basic attributes ---------------------------
-
-    private final String id;          // Unique identifier of the work package
-    private final int duration;       // Duration (time units) required for completion
-
-    private boolean isStartNode;      // True if the work package has no predecessors
-    private boolean isEndNode;        // True if the work package has no successors
-
-    // --------------------------- Network structure ---------------------------
-
-    private List<Workpackage> dependencies; // Direct dependencies (input from outside)
-    private List<Workpackage> predecessors; // Calculated during project setup
-    private List<Workpackage> successors;   // Calculated during project setup
-
-    // --------------------------- Scheduling attributes ---------------------------
-
-    private int earliestStart;  // Earliest possible start time (ES)
-    private int earliestFinish; // Earliest possible finish time (EF)
-    private int latestStart;    // Latest allowed start time (LS)
-    private int latestFinish;   // Latest allowed finish time (LF)
-    private int slack;          // Slack time = LS - ES
-
-    // --------------------------- Constructors ---------------------------
+    private String id;
+    private int duration;
+    private boolean isStartNode;
+    private boolean isEndNode;
+    private List<Workpackage> dependencies;
+    private List<Workpackage> predecessors;
+    private List<Workpackage> successors;
+    private int earliestStart;
+    private int earliestFinish;
+    private int latestStart;
+    private int latestFinish;
+    private int slack;
 
     /**
-     * Creates a new work package with the specified properties.
+     * Creates a new work package.
      *
-     * @param id           Unique identifier for this work package
-     * @param duration     Duration (time units) required to complete the task
-     * @param dependencies Other work packages that must finish before this one starts
+     * @param id           the unique identifier of the work package
+     * @param duration     the duration of this work package
+     * @param dependencies list of work packages that must be completed before this one
      */
-    public Workpackage(final String id, final int duration, final List<Workpackage> dependencies) {
-        this.id = Objects.requireNonNull(id, "id must not be null");
+    public Workpackage(String id, int duration, List<Workpackage> dependencies) {
+        this.id = id;
         this.duration = duration;
         this.dependencies = dependencies != null ? dependencies : new ArrayList<>();
         this.predecessors = new ArrayList<>();
         this.successors = new ArrayList<>();
-        this.isStartNode = this.dependencies.isEmpty();
+        this.isStartNode = dependencies.isEmpty();
         this.isEndNode = false;
     }
 
-    // --------------------------- Getters ---------------------------
-
+    /**
+     * Returns the ID of this work package.
+     *
+     * @return unique identifier
+     */
     public String getId() {
         return id;
     }
 
+    /**
+     * Returns the duration of this work package.
+     *
+     * @return duration value
+     */
     public int getDuration() {
         return duration;
     }
 
+    /**
+     * Returns the dependencies of this work package.
+     *
+     * @return list of dependent work packages
+     */
     public List<Workpackage> getDependencies() {
         return dependencies;
     }
 
-    public List<Workpackage> getPredecessors() {
-        return predecessors;
-    }
-
-    public List<Workpackage> getSuccessors() {
-        return successors;
-    }
-
+    /**
+     * Returns the earliest start time (ES).
+     *
+     * @return earliest start time
+     */
     public int getEarliestStart() {
         return earliestStart;
     }
 
-    public int getEarliestFinish() {
-        return earliestFinish;
-    }
-
+    /**
+     * Returns the latest start time (LS).
+     *
+     * @return latest start time
+     */
     public int getLatestStart() {
         return latestStart;
     }
 
+    /**
+     * Returns the earliest finish time (EF).
+     *
+     * @return earliest finish time
+     */
+    public int getEarliestFinish() {
+        return earliestFinish;
+    }
+
+    /**
+     * Returns the latest finish time (LF).
+     *
+     * @return latest finish time
+     */
     public int getLatestFinish() {
         return latestFinish;
     }
 
+    /**
+     * Returns the calculated slack (float) time.
+     *
+     * @return slack value
+     */
     public int getSlack() {
         return slack;
     }
 
+    /**
+     * Returns whether this work package is a start node.
+     *
+     * @return true if no predecessors exist
+     */
     public boolean isStartNode() {
         return isStartNode;
     }
 
+    /**
+     * Returns whether this work package is an end node.
+     *
+     * @return true if no successors exist
+     */
     public boolean isEndNode() {
         return isEndNode;
     }
 
-    // --------------------------- Setters ---------------------------
+    /**
+     * Returns the list of predecessor work packages.
+     *
+     * @return list of predecessors
+     */
+    public List<Workpackage> getPredecessors() {
+        return predecessors;
+    }
 
-    public void setEarliestStart(final int earliestStart) {
+    /**
+     * Returns the list of successor work packages.
+     *
+     * @return list of successors
+     */
+    public List<Workpackage> getSuccessors() {
+        return successors;
+    }
+
+    /**
+     * Sets the earliest start time.
+     *
+     * @param earliestStart earliest start value
+     */
+    public void setEarliestStart(int earliestStart) {
         this.earliestStart = earliestStart;
     }
 
-    public void setEarliestFinish(final int earliestFinish) {
-        this.earliestFinish = earliestFinish;
-    }
-
-    public void setLatestStart(final int latestStart) {
+    /**
+     * Sets the latest start time.
+     *
+     * @param latestStart latest start value
+     */
+    public void setLatestStart(int latestStart) {
         this.latestStart = latestStart;
     }
 
-    public void setLatestFinish(final int latestFinish) {
+    /**
+     * Sets the earliest finish time.
+     *
+     * @param earliestFinish earliest finish value
+     */
+    public void setEarliestFinish(int earliestFinish) {
+        this.earliestFinish = earliestFinish;
+    }
+
+    /**
+     * Sets the latest finish time.
+     *
+     * @param latestFinish latest finish value
+     */
+    public void setLatestFinish(int latestFinish) {
         this.latestFinish = latestFinish;
     }
 
-    public void setSlack(final int slack) {
+    /**
+     * Sets the slack (float) time.
+     *
+     * @param slack slack value
+     */
+    public void setSlack(int slack) {
         this.slack = slack;
     }
 
-    public void setStartNode(final boolean isStartNode) {
+    /**
+     * Defines whether this package is a start node.
+     *
+     * @param isStartNode true if this is a start node
+     */
+    public void setStartNode(boolean isStartNode) {
         this.isStartNode = isStartNode;
     }
 
-    public void setEndNode(final boolean isEndNode) {
+    /**
+     * Defines whether this package is an end node.
+     *
+     * @param isEndNode true if this is an end node
+     */
+    public void setEndNode(boolean isEndNode) {
         this.isEndNode = isEndNode;
     }
 
-    public void setPredecessors(final List<Workpackage> predecessors) {
+    /**
+     * Sets the list of predecessor nodes.
+     *
+     * @param predecessors list of predecessors
+     */
+    public void setPredecessors(List<Workpackage> predecessors) {
         this.predecessors = predecessors != null ? predecessors : new ArrayList<>();
     }
 
-    public void setSuccessors(final List<Workpackage> successors) {
+    /**
+     * Sets the list of successor nodes.
+     *
+     * @param successors list of successors
+     */
+    public void setSuccessors(List<Workpackage> successors) {
         this.successors = successors != null ? successors : new ArrayList<>();
     }
 
-    // --------------------------- Relationship helpers ---------------------------
-
     /**
-     * Adds a dependency (another work package that must finish first).
-     * Automatically marks this node as non-start.
+     * Adds a dependency to this work package.
+     *
+     * @param dependency the dependency to add
      */
-    public void addDependency(final Workpackage dependency) {
+    public void addDependency(Workpackage dependency) {
         if (dependency != null && !dependencies.contains(dependency)) {
             dependencies.add(dependency);
             this.isStartNode = false;
         }
     }
 
-    /** Adds a predecessor link (used during project setup). */
-    public void addPredecessor(final Workpackage predecessor) {
+    /**
+     * Adds a predecessor node.
+     *
+     * @param predecessor the predecessor to add
+     */
+    public void addPredecessor(Workpackage predecessor) {
         if (predecessor != null && !predecessors.contains(predecessor)) {
             predecessors.add(predecessor);
         }
     }
 
-    /** Adds a successor link (used during project setup). */
-    public void addSuccessor(final Workpackage successor) {
+    /**
+     * Adds a successor node.
+     *
+     * @param successor the successor to add
+     */
+    public void addSuccessor(Workpackage successor) {
         if (successor != null && !successors.contains(successor)) {
             successors.add(successor);
         }
-    }
-
-    // --------------------------- Utility methods ---------------------------
-
-    @Override
-    public String toString() {
-        return String.format(
-            "Workpackage{id='%s', duration=%d, ES=%d, EF=%d, LS=%d, LF=%d, slack=%d}",
-            id, duration, earliestStart, earliestFinish, latestStart, latestFinish, slack
-        );
     }
 }

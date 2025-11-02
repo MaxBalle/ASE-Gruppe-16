@@ -1,4 +1,4 @@
-package Blatt01.Aufgabe01;
+package Blatt01.Aufgabe01; 
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -8,10 +8,19 @@ import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+/**
+ * Test class for {@link CriticalPath}.
+ * Verifies correct calculation of earliest/latest times, slack, and critical path.
+ */
 public class CriticalPathTest {
 
-    /** Builds the exercise network used in the lecture/worksheet. */
+    /**
+     * Builds the exercise network as described in the project example.
+     *
+     * @return list of work packages forming the project network
+     */
     private List<Workpackage> buildExerciseNetwork() {
+
         Workpackage a01 = new Workpackage("A01", 3, new ArrayList<>());
         Workpackage a02 = new Workpackage("A02", 4, new ArrayList<>());
         Workpackage a03 = new Workpackage("A03", 5, new ArrayList<>());
@@ -30,58 +39,64 @@ public class CriticalPathTest {
         Workpackage a16 = new Workpackage("A16", 4, new ArrayList<>(List.of(a13, a15)));
 
         return List.of(
-            a01, a02, a03, a04, a05, a06, a07, a08, a09, a10, a11, a12, a13, a14, a15, a16
+                a01, a02, a03, a04, a05, a06, a07, a08, a09, a10, a11, a12, a13, a14, a15, a16
         );
     }
 
-    /** Helper to find a node by its ID. */
-    private static Workpackage findById(List<Workpackage> nodes, String id) {
-        return nodes.stream().filter(w -> w.getId().equals(id)).findFirst().orElseThrow();
+    /**
+     * Returns the work package with the given ID.
+     *
+     * @param nodes list of work packages
+     * @param id    ID of the desired work package
+     * @return matching work package
+     * @throws IllegalArgumentException if no work package with the given ID exists
+     */
+    private static Workpackage byId(List<Workpackage> nodes, String id) {
+        return nodes.stream().filter(w -> w.getId().equals(id)).findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("No work package with ID " + id));
     }
 
+    /**
+     * Tests whether earliest/latest times and slack are calculated correctly for each node.
+     */
     @Test
-    @DisplayName("calculateCriticalPath(): computes expected ES/EF/LS/LF and slack")
     void calculates_expected_times_and_slack() {
-        // Arrange
         List<Workpackage> nodes = buildExerciseNetwork();
         CriticalPath cp = new CriticalPath();
         cp.setWorkpackages(nodes);
 
-        // Act
         cp.buildProject();
-        cp.calculateCriticalPath(); // forward/backward/slack
+        cp.calculateCriticalPath();
 
-        // Assert – critical chain A01→A05→A12→A14 (slack = 0)
-        Workpackage a01 = findById(nodes, "A01");
+        Workpackage a01 = byId(nodes, "A01");
         assertEquals(0, a01.getEarliestStart());
         assertEquals(3, a01.getEarliestFinish());
         assertEquals(0, a01.getLatestStart());
         assertEquals(3, a01.getLatestFinish());
         assertEquals(0, a01.getSlack());
 
-        Workpackage a05 = findById(nodes, "A05");
+        Workpackage a05 = byId(nodes, "A05");
         assertEquals(3, a05.getEarliestStart());
         assertEquals(12, a05.getEarliestFinish());
         assertEquals(3, a05.getLatestStart());
         assertEquals(12, a05.getLatestFinish());
         assertEquals(0, a05.getSlack());
 
-        Workpackage a12 = findById(nodes, "A12");
+        Workpackage a12 = byId(nodes, "A12");
         assertEquals(12, a12.getEarliestStart());
         assertEquals(14, a12.getEarliestFinish());
         assertEquals(12, a12.getLatestStart());
         assertEquals(14, a12.getLatestFinish());
         assertEquals(0, a12.getSlack());
 
-        Workpackage a14 = findById(nodes, "A14");
+        Workpackage a14 = byId(nodes, "A14");
         assertEquals(14, a14.getEarliestStart());
         assertEquals(21, a14.getEarliestFinish());
         assertEquals(14, a14.getLatestStart());
         assertEquals(21, a14.getLatestFinish());
         assertEquals(0, a14.getSlack());
 
-        // Non-critical branch example – A16 (slack = 1)
-        Workpackage a16 = findById(nodes, "A16");
+        Workpackage a16 = byId(nodes, "A16");
         assertEquals(16, a16.getEarliestStart());
         assertEquals(20, a16.getEarliestFinish());
         assertEquals(17, a16.getLatestStart());
@@ -89,82 +104,80 @@ public class CriticalPathTest {
         assertEquals(1, a16.getSlack());
     }
 
+    /**
+     * Tests whether the {@code analyze()} method returns the expected project duration and critical path.
+     */
     @Test
-    @DisplayName("analyze(): project duration = 21 and critical chain A01→A05→A12→A14")
+    @DisplayName("analyze(): Project duration = 21 and critical path A01→A05→A12→A14")
     void analyze_returnsExpectedDurationAndCriticalPath() {
-        // Arrange
         List<Workpackage> nodes = buildExerciseNetwork();
         CriticalPath cp = new CriticalPath();
         cp.setWorkpackages(nodes);
 
-        // Act
         CriticalPath.Result result = cp.analyze();
 
-        // Assert – project duration
         assertEquals(21, result.getProjectDuration(), "Project duration should be 21");
 
-        // Assert – critical path (IDs)
         List<String> expected = List.of("A01", "A05", "A12", "A14");
         List<String> actual = result.getCriticalPath().stream().map(Workpackage::getId).toList();
-        assertEquals(expected, actual, "Critical path does not match");
+        assertEquals(expected, actual, "Critical path is incorrect");
     }
 
+    /**
+     * Tests whether {@code analyze()} correctly sets ES/EF/LS/LF and slack values for selected nodes.
+     */
     @Test
-    @DisplayName("analyze(): sets ES/EF/LS/LF/Slack for key nodes")
+    @DisplayName("analyze(): ES/EF/LS/LF/Slack for key nodes")
     void analyze_setsExpectedTimesOnNodes() {
-        // Arrange
         List<Workpackage> nodes = buildExerciseNetwork();
         CriticalPath cp = new CriticalPath();
         cp.setWorkpackages(nodes);
 
-        // Act
-        cp.analyze(); // populates values in place
+        cp.analyze();
 
-        // Assert – critical chain (slack = 0)
-        Workpackage A01 = findById(nodes, "A01");
+        Workpackage A01 = byId(nodes, "A01");
         assertAll("A01",
-            () -> assertEquals(0,  A01.getEarliestStart()),
-            () -> assertEquals(3,  A01.getEarliestFinish()),
-            () -> assertEquals(0,  A01.getLatestStart()),
-            () -> assertEquals(3,  A01.getLatestFinish()),
-            () -> assertEquals(0,  A01.getSlack())
+                () -> assertEquals(0, A01.getEarliestStart()),
+                () -> assertEquals(3, A01.getEarliestFinish()),
+                () -> assertEquals(0, A01.getLatestStart()),
+                () -> assertEquals(3, A01.getLatestFinish()),
+                () -> assertEquals(0, A01.getSlack())
         );
 
-        Workpackage A05 = findById(nodes, "A05");
+        Workpackage A05 = byId(nodes, "A05");
         assertAll("A05",
-            () -> assertEquals(3,  A05.getEarliestStart()),
-            () -> assertEquals(12, A05.getEarliestFinish()),
-            () -> assertEquals(3,  A05.getLatestStart()),
-            () -> assertEquals(12, A05.getLatestFinish()),
-            () -> assertEquals(0,  A05.getSlack())
+                () -> assertEquals(3, A05.getEarliestStart()),
+                () -> assertEquals(12, A05.getEarliestFinish()),
+                () -> assertEquals(3, A05.getLatestStart()),
+                () -> assertEquals(12, A05.getLatestFinish()),
+                () -> assertEquals(0, A05.getSlack())
         );
 
-        Workpackage A12 = findById(nodes, "A12");
+        Workpackage A12 = byId(nodes, "A12");
         assertAll("A12",
-            () -> assertEquals(12, A12.getEarliestStart()),
-            () -> assertEquals(14, A12.getEarliestFinish()),
-            () -> assertEquals(12, A12.getLatestStart()),
-            () -> assertEquals(14, A12.getLatestFinish()),
-            () -> assertEquals(0,  A12.getSlack())
+                () -> assertEquals(12, A12.getEarliestStart()),
+                () -> assertEquals(14, A12.getEarliestFinish()),
+                () -> assertEquals(12, A12.getLatestStart()),
+                () -> assertEquals(14, A12.getLatestFinish()),
+                () -> assertEquals(0, A12.getSlack())
         );
 
-        Workpackage A14 = findById(nodes, "A14");
+        Workpackage A14 = byId(nodes, "A14");
         assertAll("A14",
-            () -> assertEquals(14, A14.getEarliestStart()),
-            () -> assertEquals(21, A14.getEarliestFinish()),
-            () -> assertEquals(14, A14.getLatestStart()),
-            () -> assertEquals(21, A14.getLatestFinish()),
-            () -> assertEquals(0,  A14.getSlack())
+                () -> assertEquals(14, A14.getEarliestStart()),
+                () -> assertEquals(21, A14.getEarliestFinish()),
+                () -> assertEquals(14, A14.getLatestStart()),
+                () -> assertEquals(21, A14.getLatestFinish()),
+                () -> assertEquals(0, A14.getSlack())
         );
 
-        // Non-critical branch example – A16 (slack = 1)
-        Workpackage A16 = findById(nodes, "A16");
+        Workpackage A16 = byId(nodes, "A16");
         assertAll("A16",
-            () -> assertEquals(16, A16.getEarliestStart()),
-            () -> assertEquals(20, A16.getEarliestFinish()),
-            () -> assertEquals(17, A16.getLatestStart()),
-            () -> assertEquals(21, A16.getLatestFinish()),
-            () -> assertEquals(1,  A16.getSlack())
+                () -> assertEquals(16, A16.getEarliestStart()),
+                () -> assertEquals(20, A16.getEarliestFinish()),
+                () -> assertEquals(17, A16.getLatestStart()),
+                () -> assertEquals(21, A16.getLatestFinish()),
+                () -> assertEquals(1, A16.getSlack())
         );
     }
 }
